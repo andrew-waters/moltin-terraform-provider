@@ -11,26 +11,28 @@ func Provider() terraform.ResourceProvider {
 		Schema: map[string]*schema.Schema{
 			"client_id": &schema.Schema{
 				Type:        schema.TypeString,
-				Optional:    true,
+				Required:    true,
 				DefaultFunc: schema.EnvDefaultFunc("MOLTIN_CLIENT_ID", nil),
 				Description: "Your Moltin Client ID.",
 			},
 			"client_secret": &schema.Schema{
 				Type:        schema.TypeString,
-				Optional:    true,
+				Required:    true,
 				DefaultFunc: schema.EnvDefaultFunc("MOLTIN_CLIENT_SECRET", nil),
 				Description: "Your Moltin Client Secret.",
 			},
 		},
 
 		DataSourcesMap: map[string]*schema.Resource{
-			"moltin_product":  dataSourceMoltinProduct(),
 			"moltin_currency": dataSourceMoltinCurrency(),
+			"moltin_product":  dataSourceMoltinProduct(),
+			"moltin_settings": dataSourceMoltinSettings(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
-			"moltin_product":  resourceMoltinProduct(),
 			"moltin_currency": resourceMoltinCurrency(),
+			"moltin_product":  resourceMoltinProduct(),
+			"moltin_settings": resourceMoltinSettings(),
 		},
 
 		ConfigureFunc: providerConfigure,

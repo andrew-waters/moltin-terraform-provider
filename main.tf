@@ -3,6 +3,12 @@ provider "moltin" {
   client_secret = "${var.moltin_client_secret}"
 }
 
+// resource "moltin_settings" "settings" {
+//   page_length          = "GBP"
+//   list_child_products  = 1
+//   additional_languages = []
+// }
+
 resource "moltin_currency" "GBP" {
   code                = "GBP"
   exchange_rate       = 1
