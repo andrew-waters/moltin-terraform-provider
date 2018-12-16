@@ -1,0 +1,9 @@
+variable "moltin_client_id" {
+  type    = "string"
+  default = "your_client_id"
+}
+
+variable "moltin_client_secret" {
+  type    = "string"
+  default = "your_client_secret"
+}
