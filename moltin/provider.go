@@ -24,15 +24,21 @@ func Provider() terraform.ResourceProvider {
 		},
 
 		DataSourcesMap: map[string]*schema.Resource{
-			"moltin_currency": dataSourceMoltinCurrency(),
-			"moltin_product":  dataSourceMoltinProduct(),
-			"moltin_settings": dataSourceMoltinSettings(),
+			"moltin_brand":      dataSourceMoltinBrand(),
+			"moltin_category":   dataSourceMoltinCategory(),
+			"moltin_collection": dataSourceMoltinCollection(),
+			"moltin_currency":   dataSourceMoltinCurrency(),
+			"moltin_product":    dataSourceMoltinProduct(),
+			"moltin_settings":   dataSourceMoltinSettings(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
-			"moltin_currency": resourceMoltinCurrency(),
-			"moltin_product":  resourceMoltinProduct(),
-			"moltin_settings": resourceMoltinSettings(),
+			"moltin_brand":      resourceMoltinBrand(),
+			"moltin_category":   resourceMoltinCategory(),
+			"moltin_collection": resourceMoltinCollection(),
+			"moltin_currency":   resourceMoltinCurrency(),
+			"moltin_product":    resourceMoltinProduct(),
+			"moltin_settings":   resourceMoltinSettings(),
 		},
 
 		ConfigureFunc: providerConfigure,

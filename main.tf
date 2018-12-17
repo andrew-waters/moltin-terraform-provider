@@ -9,6 +9,36 @@ provider "moltin" {
 //   additional_languages = []
 // }
 
+resource "moltin_brand" "DeWalt" {
+  name        = "DeWalt"
+  slug        = "dewalt"
+  description = "DeWalt is an American worldwide brand of power tools and hand tools for the construction, manufacturing and woodworking industries. DeWalt is a trade name of Black & Decker Inc., a subsidiary of Stanley Black & Decker."
+  status      = "live"
+}
+
+resource "moltin_brand" "Makita" {
+  name        = "Makita"
+  slug        = "makita"
+  description = "Makita Corporation is a Japanese manufacturer of power tools. Founded on March 21, 1915, it is based in Anjō, Japan, and operates factories in Brazil, Canada, China, Japan, Mexico, Romania, the United Kingdom, Germany and the United States."
+  status      = "live"
+}
+
+
+resource "moltin_category" "Drills" {
+  name        = "Drills"
+  slug        = "drills"
+  description = "Drills"
+  status      = "live"
+}
+
+resource "moltin_collection" "Pro" {
+  name        = "Pro"
+  slug        = "pro"
+  description = "Pro tools for the trade"
+  status      = "live"
+}
+
+
 resource "moltin_currency" "GBP" {
   code                = "GBP"
   exchange_rate       = 1
