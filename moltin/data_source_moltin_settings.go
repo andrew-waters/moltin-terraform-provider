@@ -10,17 +10,20 @@ func dataSourceMoltinSettings() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceMoltinSettingsRead,
 		Schema: map[string]*schema.Schema{
-			"code": {
-				Type:     schema.TypeString,
-				Required: true,
+			"page_length": {
+				Type:     schema.TypeInt,
+				Optional: true,
 			},
-			"exchange_rate": {
-				Type:     schema.TypeFloat,
-				Required: true,
+			"list_child_products": {
+				Type:     schema.TypeBool,
+				Optional: true,
 			},
-			"format": {
-				Type:     schema.TypeString,
-				Required: true,
+			"additional_languages": {
+				Type: schema.TypeList,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Optional: true,
 			},
 		},
 	}

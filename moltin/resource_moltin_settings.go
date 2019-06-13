@@ -10,28 +10,40 @@ import (
 
 func resourceMoltinSettings() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceMoltinSettingsCreate,
+		Create: resourceMoltinSettingsUpdate,
 		Read:   resourceMoltinSettingsRead,
 		Update: resourceMoltinSettingsUpdate,
 		Delete: resourceMoltinSettingsDelete,
 		Importer: &schema.ResourceImporter{
-			State: resourceMoltinCurrencyImport,
+			State: resourceMoltinSettingsImport,
 		},
 		Schema: map[string]*schema.Schema{
 			"page_length": {
 				Type:     schema.TypeInt,
-				Required: false,
 				Optional: true,
 			},
 			"list_child_products": {
 				Type:     schema.TypeBool,
-				Required: false,
 				Optional: true,
 			},
 			"additional_languages": {
-				Type:     schema.TypeString,
-				Required: false,
+				Type: schema.TypeList,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 				Optional: true,
+				// This is commented out because TF doesn't support validation on lists or maps yet
+				// ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
+				// 	v := val.(string)
+				// 	s := entities.Settings{}
+				// 	for _, b := range s.SupportedLanguages() {
+				// 		if b == v {
+				// 			return
+				// 		}
+				// 	}
+				// 	errs = append(errs, fmt.Errorf("%q is not a valid language", key, v))
+				// 	return
+				// },
 			},
 		},
 	}
@@ -44,13 +56,17 @@ func resourceMoltinSettingsUpdate(d *schema.ResourceData, meta interface{}) erro
 	if err != nil {
 		return err
 	}
-
-	_, err = client.Put(fmt.Sprintf("currencies/%s", d.Id()), settings)
+	_, err = client.Put("settings", settings)
 	if err != nil {
 		return fmt.Errorf("Error updating Settings: %s", err)
 	}
 
-	return resourceMoltinCurrencyRead(d, meta)
+	d.SetId("settings")
+	d.Set("page_length", settings.PageLength)
+	d.Set("list_child_products", settings.ListChildProducts)
+	d.Set("additional_languages", settings.AdditionalLanguages)
+
+	return resourceMoltinSettingsRead(d, meta)
 }
 
 func resourceMoltinSettingsDelete(d *schema.ResourceData, meta interface{}) error {
@@ -75,41 +91,35 @@ func resourceMoltinSettingsRead(d *schema.ResourceData, meta interface{}) error 
 	return nil
 }
 
-func resourceMoltinSettingsCreate(d *schema.ResourceData, meta interface{}) error {
-	// Settings can't be created, you need to update them
-	return nil
-}
-
 func resourceMoltinSettingsImport(d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
-	id := d.Id()
 
 	err := resourceMoltinSettingsRead(d, meta)
 	if err != nil {
 		return nil, err
 	}
 
-	if d.Id() == "" {
-		return nil, fmt.Errorf("Couldn't find Settings: %s", id)
-	}
-
-	results := []*schema.ResourceData{d}
-
-	return results, nil
+	return []*schema.ResourceData{d}, nil
 }
 
 func createSettingsFromResourceData(d *schema.ResourceData) (*entities.Settings, error) {
-
-	Settings := entities.Settings{}
+	s := entities.Settings{}
 
 	if v, ok := d.GetOk("page_length"); ok {
-		Settings.PageLength = v.(int)
+		s.PageLength = v.(int)
 	}
 	if v, ok := d.GetOk("list_child_products"); ok {
-		Settings.ListChildProducts = v.(bool)
+		s.ListChildProducts = v.(bool)
 	}
 	if v, ok := d.GetOk("additional_languages"); ok {
-		Settings.AdditionalLanguages = v.([]string)
+		languages := make([]string, 0)
+		switch v := v.(type) {
+		case []interface{}:
+			for _, lang := range v {
+				languages = append(languages, lang.(string))
+			}
+		}
+		s.AdditionalLanguages = languages
 	}
 
-	return &Settings, nil
+	return &s, nil
 }

@@ -1,8 +1,12 @@
 build:
 	go build -o terraform-provider-moltin
 
+plan:
+	go build -o terraform-provider-moltin && \
+	terraform init && \
+	terraform plan
+
 apply:
-	export TF_LOG=ERROR && \
 	go build -o terraform-provider-moltin && \
 	terraform init && \
 	terraform apply
@@ -12,3 +16,9 @@ destroy:
 	go build -o terraform-provider-moltin && \
 	terraform init && \
 	terraform destroy
+
+refresh:
+	export TF_LOG=ERROR && \
+	go build -o terraform-provider-moltin && \
+	terraform init && \
+	terraform refresh

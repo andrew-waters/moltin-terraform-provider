@@ -32,6 +32,10 @@ func dataSourceMoltinProduct() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
+			"manage_stock": {
+				Type:     schema.TypeBool,
+				Required: true,
+			},
 			"price": {
 				Type:     schema.TypeSet,
 				Required: true,
@@ -72,6 +76,7 @@ func dataSourceMoltinProductRead(d *schema.ResourceData, meta interface{}) error
 	d.Set("sku", product.Name)
 	d.Set("description", product.Description)
 	d.Set("price", product.Price)
+	d.Set("manage_stock", product.ManageStock)
 
 	return nil
 }

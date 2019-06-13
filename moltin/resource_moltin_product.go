@@ -51,6 +51,10 @@ func resourceMoltinProduct() *schema.Resource {
 					"digital",
 				}, false),
 			},
+			"manage_stock": {
+				Type:     schema.TypeBool,
+				Required: true,
+			},
 			"price": {
 				Type:     schema.TypeList,
 				Required: true,
@@ -114,6 +118,7 @@ func resourceMoltinProductRead(d *schema.ResourceData, meta interface{}) error {
 	d.Set("description", product.Description)
 	d.Set("status", product.Status)
 	d.Set("commodity_type", product.CommodityType)
+	d.Set("manage_stock", product.ManageStock)
 	d.Set("price", product.Price)
 
 	return nil
@@ -177,6 +182,9 @@ func createProductFromResourceData(d *schema.ResourceData) (entities.Product, er
 	}
 	if v, ok := d.GetOk("commodity_type"); ok {
 		product.CommodityType = v.(string)
+	}
+	if v, ok := d.GetOk("manage_stock"); ok {
+		product.ManageStock = v.(bool)
 	}
 
 	product.Price = expandPrice(d.Get("price").([]interface{}))

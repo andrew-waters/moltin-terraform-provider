@@ -11,11 +11,11 @@ type config struct {
 }
 
 func (c *config) client() (*gomo.Client, error) {
-	client, err := gomo.NewClient(
+	client := gomo.NewClient(
 		gomo.NewClientCredentials(
 			c.ClientID,
 			c.ClientSecret,
 		),
 	)
-	return &client, err
+	return &client, client.Authenticate()
 }
